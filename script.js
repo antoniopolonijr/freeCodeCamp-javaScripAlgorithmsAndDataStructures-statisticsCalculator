@@ -1,4 +1,4 @@
-// function to get the mean, it is the average value of all numbers in a list.
+// function to get the Mean, it is the average value of all numbers in a list.
 const getMean = (array) =>
   array.reduce((acc, el) => acc + el, 0) / array.length;
 // const sum = array.reduce((acc, el) => acc + el, 0); // clean this logic up a bit. Using the implicit return of an arrow function
@@ -10,7 +10,7 @@ const getMean = (array) =>
 // return mean; // clean this logic up a bit. Using the implicit return of an arrow function
 // You can actually clean this logic up a bit. Using the implicit return of an arrow function, you can directly return the value of the .reduce() method divided by the length of the array, without having to assign any variables.
 
-// function to get the median calculation. The median is the midpoint of a set of numbers.
+// function to get the Median. The median is the midpoint of a set of numbers.
 const getMedian = (array) => {
   const sorted = array.sort((a, b) => a - b); // The first step in calculating the median is to ensure the list of numbers is sorted from least to greatest. Once again, there is an array method ideal for this – the .sort() method.
   // By default, the .sort() method converts the elements of an array into strings, then sorts them alphabetically. This works well for strings, but not so well for numbers. For example, 10 comes before 2 when sorted as strings, but 2 comes before 10 when sorted as numbers. To fix this, you can pass in a callback function to the .sort() method. This function takes two arguments, which represent the two elements being compared. The function should return a value less than 0 if the first element should come before the second element, a value greater than 0 if the first element should come after the second element, and 0 if the two elements should remain in their current positions. To sort your numbers from smallest to largest, pass a callback function that takes parameters a and b, and returns the result of subtracting b from a.
@@ -68,6 +68,46 @@ Now that you have a better understanding of how to find the median for odd and e
 */
 };
 
+// function to get the Mode, which is the number that appears most often in the list
+const getMode = (array) => {
+  /* To calculate the occurrence you can use the following approach:
+Example Code
+const numbersArr = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4];
+const counts = {};
+numbersArr.forEach((el) => {
+  if (counts[el]) {
+    counts[el] += 1;
+  } else {
+    counts[el] = 1;
+  }
+});
+Check if the current number is already in the counts object. If it is, increment it by 1. If it is not, set it to 1.
+Resulting object. The keys are the numbers from the array and the values are the number of times each number appears in the list:
+Example Code
+{ 1: 3, 2: 3, 3: 3, 4: 3, 5: 2 } */
+  const counts = {};
+  // o better understand how the getMode function is going to work, you will need to print out its contents. This will allow you to see what is happening as you build out the function
+  array.forEach((el) => (counts[el] = (counts[el] || 0) + 1)); // loop to count the frequency of occurrences of each number in the array.
+  // return array; // To see the result, enter the numbers 4, 4, 2, 5 and click on the "Calculate" button. Open up the console to see the following array: [ 2, 4, 4, 5 ]
+  // return counts; // To test this, enter the numbers 4, 4, 2, 5 and click Calculate. You should see the following in the console: { '2': 1, '4': 2, '5': 1 }
+  /* There are a few edge cases to account for when calculating the mode of a dataset. First, if every value appears the same number of times, there is no mode.
+  To calculate this, you will use a Set. A Set is a data structure that only allows unique values. If you pass an array into the Set constructor, it will remove any duplicate values.
+  Start by creating an if statement. In the condition, create a Set with new Set() and pass it the Object.values() of your counts object. If the size property of this Set is equal to 1, that tells you every value appears the same number of times. In this case, return null from your function. */
+  if (new Set(Object.values(counts)).size === 1) {
+    return null;
+  }
+  const highest = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
+  // Now you need to find the value that occurs with the highest frequency. You'll use the Object.keys() method for this.
+  /* Now you need to sort the values properly. Chain the .sort() method to your Object.keys() call.
+  For the callback, you'll need to use the counts object to compare the values of each key. You can use the a and b parameters to access the keys. Then, return the value of counts[b] minus the value of counts[a].
+  Finally, access the first element in the array using bracket notation to complete your highest variable. */
+  const mode = Object.keys(counts).filter(
+    (el) => counts[el] === counts[highest]
+  ); // If multiple numbers in a series occur at the same highest frequency, they are all considered the mode. Otherwise, the mode is the number that occurs most often, that single number is the mode. Thankfully, you can handle both of these cases at once with the .filter() method.
+  // the filter method to your latest Object.keys() call. The callback function should return whether the value of counts[el] is equal to your counts[highest].
+  return mode.join(", "); // mode is an array, so return it as a string with the .join() method.
+};
+
 // this function is called when the form is submitted <form onsubmit="calculate();">
 const calculate = () => {
   const value = document.querySelector("#numbers").value; // to find the number that was entered in the #numbers input field
@@ -79,7 +119,10 @@ const calculate = () => {
   // Array methods can often be chained together to perform multiple operations at once.
   const mean = getMean(numbers);
   const median = getMedian(numbers);
+  const mode = getMode(numbers);
   document.querySelector("#mean").textContent = mean; // To display the value of mean
   // If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh. To resolve this, add return false; after your calculate(); call in the onsubmit attribute.
   document.querySelector("#median").textContent = median;
+  // console.log(getMode(numbers)); for testing
+  document.querySelector("#mode").textContent = mode;
 };
