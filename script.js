@@ -108,6 +108,14 @@ Example Code
   return mode.join(", "); // mode is an array, so return it as a string with the .join() method.
 };
 
+// function to get the Range, which is the difference between the largest and smallest numbers in the list.
+const getRange = (array) => Math.max(...array) - Math.min(...array);
+/* You previously learned about the global Math object. Math has a .min() method to get the smallest number from a series of numbers, and the .max() method to get the largest number. Here's an example that gets the smallest number from an array:
+  Example Code
+  const numbersArr = [2, 3, 1];
+  console.log(Math.min(...numbersArr));
+  // Expected output: 1 */
+
 // this function is called when the form is submitted <form onsubmit="calculate();">
 const calculate = () => {
   const value = document.querySelector("#numbers").value; // to find the number that was entered in the #numbers input field
@@ -120,9 +128,11 @@ const calculate = () => {
   const mean = getMean(numbers);
   const median = getMedian(numbers);
   const mode = getMode(numbers);
+  const range = getRange(numbers);
   document.querySelector("#mean").textContent = mean; // To display the value of mean
   // If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh. To resolve this, add return false; after your calculate(); call in the onsubmit attribute.
   document.querySelector("#median").textContent = median;
   // console.log(getMode(numbers)); for testing
   document.querySelector("#mode").textContent = mode;
+  document.querySelector("#range").textContent = range;
 };
