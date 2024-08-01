@@ -12,8 +12,9 @@ const getMean = (array) =>
 
 // function to get the Median. The median is the midpoint of a set of numbers.
 const getMedian = (array) => {
-  const sorted = array.sort((a, b) => a - b); // The first step in calculating the median is to ensure the list of numbers is sorted from least to greatest. Once again, there is an array method ideal for this – the .sort() method.
+  const sorted = array.slice().sort((a, b) => a - b); // The first step in calculating the median is to ensure the list of numbers is sorted from least to greatest. Once again, there is an array method ideal for this – the .sort() method.
   // By default, the .sort() method converts the elements of an array into strings, then sorts them alphabetically. This works well for strings, but not so well for numbers. For example, 10 comes before 2 when sorted as strings, but 2 comes before 10 when sorted as numbers. To fix this, you can pass in a callback function to the .sort() method. This function takes two arguments, which represent the two elements being compared. The function should return a value less than 0 if the first element should come before the second element, a value greater than 0 if the first element should come after the second element, and 0 if the two elements should remain in their current positions. To sort your numbers from smallest to largest, pass a callback function that takes parameters a and b, and returns the result of subtracting b from a.
+  // The .sort() method mutates the array it's called on. It is generally bad practice to mutate a function parameter, which array is. To fix this, add an empty .slice() call before your .sort() method. The empty .slice() call will make a shallow copy of the array, which you are free to mutate.
   const median =
     array.length % 2 === 0 // check if the length of array is even.
       ? getMean([sorted[array.length / 2], sorted[array.length / 2 - 1]]) // If it even, find the middle two numbers, calculate their mean
@@ -137,6 +138,28 @@ const getVariance = (array) => {
   return variance;
 };
 
+// function to get the Standard Deviation, which is the square root of the variance.
+const getStandardDeviation = (array) => {
+  const variance = getVariance(array);
+  /*
+  To calculate a root exponent, such as  x−−√n
+ , you can use an inverted exponent  x1/n
+ . JavaScript has a built-in Math.pow() function that can be used to calculate exponents.
+Here is the basic syntax for the Math.pow() function:
+Example Code
+Math.pow(base, exponent);
+Here is an example of how to calculate the square root of 4:
+Example Code
+const base = 4;
+const exponent = 0.5;
+// returns 2
+Math.pow(base, exponent);
+  */
+  // const standardDeviation = Math.pow(variance, 1 / 2);
+  const standardDeviation = Math.sqrt(variance); // The Math object has a .sqrt() method specifically for finding the square root of a number.
+  return standardDeviation;
+};
+
 // this function is called when the form is submitted <form onsubmit="calculate();">
 const calculate = () => {
   const value = document.querySelector("#numbers").value; // to find the number that was entered in the #numbers input field
@@ -151,6 +174,7 @@ const calculate = () => {
   const mode = getMode(numbers);
   const range = getRange(numbers);
   const variance = getVariance(numbers);
+  const standardDeviation = getStandardDeviation(numbers);
   document.querySelector("#mean").textContent = mean; // To display the value of mean
   // If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh. To resolve this, add return false; after your calculate(); call in the onsubmit attribute. // update the respective HTML element.
   document.querySelector("#median").textContent = median;
@@ -158,4 +182,5 @@ const calculate = () => {
   document.querySelector("#mode").textContent = mode;
   document.querySelector("#range").textContent = range;
   document.querySelector("#variance").textContent = variance;
+  document.querySelector("#standardDeviation").textContent = standardDeviation;
 };
