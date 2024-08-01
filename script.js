@@ -116,6 +116,27 @@ const getRange = (array) => Math.max(...array) - Math.min(...array);
   console.log(Math.min(...numbersArr));
   // Expected output: 1 */
 
+// function to get the Variance, The variance of a series represents how much the data deviates from the mean, and can be used to determine how spread out the data are.
+const getVariance = (array) => {
+  const mean = getMean(array);
+  /*
+  const differences = array.map((el) => el - mean); // to calculate how far each element is from the mean.
+  const squaredDifferences = differences.map((el) => el ** 2); // To square a value, you can use the ** operator.
+  const sumSquaredDifferences = squaredDifferences.reduce(
+    (acc, el) => acc + el,
+    0
+  );  // Next, you need to take the sum of the squared differences.
+  */
+  // With two .map() calls and a .reduce() call, you're creating extra arrays and iterating more times than needed. You should move all of the logic into the .reduce() call to save time and memory.
+  const variance =
+    array.reduce((acc, el) => {
+      const difference = el - mean;
+      const squared = difference ** 2;
+      return acc + squared;
+    }, 0) / array.length; // The final step in calculating the variance is to divide the sum of the squared differences by the count of numbers.
+  return variance;
+};
+
 // this function is called when the form is submitted <form onsubmit="calculate();">
 const calculate = () => {
   const value = document.querySelector("#numbers").value; // to find the number that was entered in the #numbers input field
@@ -129,10 +150,12 @@ const calculate = () => {
   const median = getMedian(numbers);
   const mode = getMode(numbers);
   const range = getRange(numbers);
+  const variance = getVariance(numbers);
   document.querySelector("#mean").textContent = mean; // To display the value of mean
-  // If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh. To resolve this, add return false; after your calculate(); call in the onsubmit attribute.
+  // If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh. To resolve this, add return false; after your calculate(); call in the onsubmit attribute. // update the respective HTML element.
   document.querySelector("#median").textContent = median;
   // console.log(getMode(numbers)); for testing
   document.querySelector("#mode").textContent = mode;
   document.querySelector("#range").textContent = range;
+  document.querySelector("#variance").textContent = variance;
 };
